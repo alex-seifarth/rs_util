@@ -1,0 +1,25 @@
+[package]
+name = "util"
+version = "0.1.0"
+authors = ["Alexander Seifarth <seifarth@titnc.de>"]
+edition = "2018"
+description = "Utility tools for RUST projects"
+license = "MIT"
+
+[dependencies]
+
+[lib]
+name = "util"
+path = "src/lib.rs"
+test = true            # Is tested by default.
+doctest = true         # Documentation examples are tested by default.
+bench = true           # Is benchmarked by default.
+doc = true             # Is documented by default.
+proc-macro = false     # Set to `true` for a proc-macro library.
+harness = true         # Use libtest harness.
+edition = "2015"       # The edition of the target.
+crate-type = ["lib"]   # The crate types to generate.
+required-features = [] # Features required to build this target (N/A for lib).
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
