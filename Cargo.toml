@@ -1,5 +1,5 @@
 [package]
-name = "util"
+name = "rs_util"
 version = "0.1.0"
 authors = ["Alexander Seifarth <seifarth@titnc.de>"]
 edition = "2018"
@@ -7,6 +7,9 @@ description = "Utility tools for RUST projects"
 license = "MIT"
 
 [dependencies]
+
+[dev-dependencies]
+rand = "0.7.3"
 
 [lib]
 name = "util"

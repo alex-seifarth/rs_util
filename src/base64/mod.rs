@@ -45,6 +45,9 @@ pub fn encode_fns<T>(bytes: T) -> Vec<u8>
     encoding::encode_internal(bytes.as_ref(), encoding::ENCODING_TABLE_FILENAME_SAVE)
 }
 
+/// Decodes the input data as Base64 (canonical or filename safe) encoded data.
+/// The method can handle missing padding characters.
+/// The method cannot automatically remove new lines and interprets them as input data error.
 pub fn decode<T>(bytes: T) -> Result<Vec<u8>, DecodingError>
     where T: AsRef<[u8]>
 {
@@ -54,8 +57,11 @@ pub fn decode<T>(bytes: T) -> Result<Vec<u8>, DecodingError>
 
 #[cfg(test)]
 mod tests {
+    extern crate rand;
 
     use crate::base64;
+    use self::rand::Rng;
+    use base64::decoding::DecodingError;
 
     #[test]
     fn test_encode_rfc4648_test_vectors() {
@@ -94,4 +100,33 @@ mod tests {
         assert_eq!(base64::decode(b"Zm9vYg"), Ok(b"foob".to_vec()));
     }
 
+    #[test]
+    fn test_encode_decode_roundtrip() {
+        let data = vec!["", "Alexander Seifarth", "ioa\ndkdi", "Enjoy the Silence", "09a 9./9d+"];
+
+        for d in data.iter() {
+            let enc = base64::encode(d.as_bytes());
+            let dec = base64::decode(enc.as_slice());
+            assert_eq!(dec, Ok(d.as_bytes().to_vec()));
+        }
+    }
+
+    #[test]
+    fn test_encode_decode_roundtrip_random_binary() {
+        let side = self::rand::distributions::Uniform::new_inclusive(0, 255);
+
+        let rng = rand::thread_rng();
+        let n1 : Vec<u8> = rng.sample_iter(&side).take(500).collect();
+        let enc = base64::encode(&n1);
+        let dec = base64::decode(enc.as_slice());
+        assert_eq!(dec, Ok(n1));
+    }
+
+    #[test]
+    fn test_decode_invalid_input() {
+        let input : Vec<u8> = vec![0x41, 0x42, 0x43, 0x99, 0x3d];
+        assert_eq!(base64::decode(input.as_slice()), Err(DecodingError::InvalidChar{value: 0x99, index: 3}));
+
+        assert_eq!(base64::decode(b"Zg==="), Err(DecodingError::InvalidChar{value: 0x3d, index: 2}));
+    }
 }
