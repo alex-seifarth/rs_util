@@ -20,8 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#[cfg(feature = "coding")]
-pub mod base64;
+pub struct Url {
 
-#[cfg(feature = "url")]
-pub mod url;
+    scheme: String,
+}
+
+impl Url {
+
+    pub fn scheme_ref(&self) -> &str {
+        self.scheme.as_str()
+    }
+
+}

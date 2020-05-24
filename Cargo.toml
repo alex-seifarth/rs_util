@@ -6,6 +6,11 @@ edition = "2018"
 description = "Utility tools for RUST projects"
 license = "MIT"
 
+[features]
+default = ["url"]
+coding = []
+url = ["coding"]
+
 [dependencies]
 
 [dev-dependencies]
